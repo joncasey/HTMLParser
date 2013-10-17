@@ -1,0 +1,33 @@
+﻿<job>
+<script src="..\HTMLParser.js"/>
+<script>
+/// <reference path="..\HTMLParser.js">
+
+var htmlString = getResource('html')
+  , xmlString1 = HTMLParser.toXMLString(htmlString)
+  , xmlString2 = HTMLParser.toXMLString(htmlString
+    , function(tag) { return tag.toUpperCase() }
+    , function(a) { a.escaped += '(OK)' ; return a }
+    )
+
+WScript.Echo(
+  xmlString1 + '\n'
++ xmlString2
+)
+
+</script>
+<resource id="html">
+<![CDATA[<!DOCTYPE html>
+<html>
+  <head>
+    <title>Testing</title>
+    <meta http-equiv=x-ua-compatible content="ie=edge">
+    <link href="css/test.css" rel=stylesheet>
+  </head>
+  <body>
+    <a href=# class=test>Test</a>
+    <br>
+  </body>
+</html>]]>
+</resource>
+</job>
