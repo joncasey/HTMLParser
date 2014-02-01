@@ -1,18 +1,17 @@
 ﻿<job>
 <script src="..\HTMLParser.js"/>
-<script>
-/// <reference path="..\HTMLParser.js">
+<script>/// <reference path="..\HTMLParser.js">
 
 var htmlString = getResource('html')
-  , xmlString1 = HTMLParser.toXMLString(htmlString)
-  , xmlString2 = HTMLParser.toXMLString(htmlString
-    , function(tag) { return tag.toUpperCase() }
-    , function(a) { a.escaped += '(OK)' ; return a }
+var xmlString1 = HTMLParser.toXMLString(htmlString)
+var xmlString2 = HTMLParser.toXMLString(htmlString,
+      function(tag) { return tag.toUpperCase() },
+      function(a) { a.escaped += '(OK)' ; return a }
     )
 
 WScript.Echo(
-  xmlString1 + '\n'
-+ xmlString2
+  xmlString1 +'\n'+
+  xmlString2
 )
 
 </script>

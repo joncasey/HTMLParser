@@ -1,31 +1,27 @@
-// HTML Parser | 2013, Jon Casey http://myschemas.com <-- John Resig http://ejohn.org <-- Erik Arvidsson http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+// HTML Parser | 2013-2014, Jon Casey http://myschemas.com <-- John Resig http://ejohn.org <-- Erik Arvidsson http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
 ;(function(global) {
   var tagStart  = /^<(\w+)((?:\s+[\w-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/
-    , tagEnd    = /^<\/(\w+)[^>]*>/
-    , attr      = /([\w-]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g
-    , empty     = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed') // Empty Elements - HTML 4.01
-    , block     = makeMap('address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul') // Block Elements - HTML 4.01
-    , inline    = makeMap('a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var') // Inline Elements - HTML 4.01
-    , closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr') // can intentionally leave open, will close
-    , fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected') // attributes that values equal name, disabled="disbled"
-    , special   = makeMap('script,style') // Special Elements (can contain anything)
+  var tagEnd    = /^<\/(\w+)[^>]*>/
+  var attr      = /([\w-]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g
+  var empty     = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed') // Empty Elements - HTML 4.01
+  var block     = makeMap('address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul') // Block Elements - HTML 4.01
+  var inline    = makeMap('a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var') // Inline Elements - HTML 4.01
+  var closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr') // can intentionally leave open, will close
+  var fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected') // attributes that values equal name, disabled="disbled"
+  var special   = makeMap('script,style') // Special Elements (can contain anything)
 
   function HTMLParser(html, handler) {
     /// <param name="html" type="String"/>
     /// <param name="handler">
-    /// &#10;{
-    /// &#10;  doctype: function(text) {}
-    /// &#10;, start: function(tag, attrs, unary) {}
-    /// &#10;, end: function(tag) {}
-    /// &#10;, chars: function(text) {}
-    /// &#10;, comment: function(text) {}
-    /// &#10;}
+    /// {                                         &#10;
+    ///   doctype: function(text) {},             &#10;
+    ///   start: function(tag, attrs, unary) {},  &#10;
+    ///   end: function(tag) {},                  &#10;
+    ///   chars: function(text) {},               &#10;
+    ///   comment: function(text) {}              &#10;
+    /// }                                         &#10;
     /// </param>
-    var chars
-      , index
-      , match
-      , stack = []
-      , last = html
+    var chars, index, match, stack = [], last = html
     stack.last = function() {return this[Math.max(this.length-1,0)]}
     while (html) {
       chars = true
@@ -117,9 +113,9 @@
                     : arguments[4] ? arguments[4]
                     : fillAttrs[name] ? name : ''
           attrs.push({
-            'name'    : name
-          , 'value'   : value
-          , 'escaped' : value.replace(/(^|[^\\])"/g, '$1\\\"')
+            'name'    : name,
+            'value'   : value,
+            'escaped' : value.replace(/(^|[^\\])"/g, '$1\\\"')
           })
         })
         if (handler.start)
@@ -129,7 +125,7 @@
 
     function parseTagEnd(tag, tagName) {
       var i = stack.length - 1
-        , pos = tagName ? i : 0
+      var pos = tagName ? i : 0
       if (tagName)
         for (; pos >= 0; pos--)
           if (stack[pos] == tagName) break
@@ -155,19 +151,19 @@
         'chars' : function(s, tag) {
           if (/^script$/i.test(tag)) s = '<![CDATA['+ s +']]>'
           x.push(s)
-        }
+        },
 
-      , 'comment' : function(s) {
+        'comment' : function(s) {
           x.push('<!--'+ s +'-->')
-        }
+        },
 
-      , 'end' : function(s) {
+        'end' : function(s) {
           if (tagFn) s = tagFn(s)
           if (s == '') return
           x.push('</'+ s +'>')
-        }
+        },
 
-      , 'start' : typeof attrFn == 'function'
+        'start' : typeof attrFn == 'function'
           ? function(s, a, u) {
               if (tagFn) s = tagFn(s)
               if (s == '') return
@@ -201,10 +197,8 @@
 
   function makeMap(s) {
     var a = s.split(',')
-      , i = 0
-      , l = a.length
-      , o = {}
-    for (;i < l; i++) {
+    var o = {}
+    for (var i = 0, l = a.length; i < l; i++) {
       o[a[i].toUpperCase()] = o[a[i]] = true
     }
     return o

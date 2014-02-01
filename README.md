@@ -16,11 +16,11 @@ Which was based on Erik Arvidsson's [simplehtmlparser.js](http://erik.eae.net/si
 or
 
     var xmlString = HTMLParser.toXMLString(
-                      htmlString
-                    , function(tag) {
+                      htmlString,
+                      function(tag) {
                         return tag.toLowerCase()
-                      }
-                    , function(attr) {
+                      },
+                      function(attr) {
                         attr.escaped = attr.escaped.replace(/&/g, '&amp;')
                         return attr
                       }
