@@ -28,6 +28,13 @@
   <body>
     <a href=# class=test>Test</a>
     <br>
+    <table>
+      <tr>
+        <th><code>TH</code>
+        <td>TD#1
+        <td>TD#2
+      </tr>
+    </table>
   </body>
 </html>]]>
 </resource>
