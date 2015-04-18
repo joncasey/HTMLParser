@@ -6,6 +6,7 @@
   var empty     = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed') // Empty Elements - HTML 4.01
   var block     = makeMap('address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul') // Block Elements - HTML 4.01
   var inline    = makeMap('a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var') // Inline Elements - HTML 4.01
+  var closeAlts = { td: makeMap('th'), th: makeMap('td') }
   var closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr') // can intentionally leave open, will close
   var fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected') // attributes that values equal name, disabled="disbled"
   var special   = makeMap('script,style') // Special Elements (can contain anything)
@@ -91,15 +92,25 @@
 
     parseTagEnd() // Clean up any remaining tags
 
+
     function parseTagStart(tag, tagName, rest, unary) {
+
       if (block[tagName]) {
         while (stack.last() && inline[stack.last()]) {
           parseTagEnd('', stack.last())
         }
       }
 
-      if (closeSelf[tagName] && stack.last() == tagName) {
-        parseTagEnd('', tagName)
+      if (closeSelf[tagName]) {
+        if (stack.last() == tagName) {
+          parseTagEnd('', tagName)
+        }
+        else {
+          var alts = closeAlts[tagName.toLowerCase()]
+          if (alts && alts[stack.last()]) {
+            parseTagEnd('', stack.last())
+          }
+        }
       }
 
       unary = empty[tagName] || !!unary
