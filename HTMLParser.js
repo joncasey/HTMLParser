@@ -1,4 +1,4 @@
-// HTML Parser | 2013-2014, Jon Casey http://myschemas.com <-- John Resig http://ejohn.org <-- Erik Arvidsson http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+// HTML Parser | 2013-2015, Jon Casey http://myschemas.com <-- John Resig http://ejohn.org <-- Erik Arvidsson http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
 ;(function(global) {
   var tagStart  = /^<(\w+)((?:\s+[\w-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/
   var tagEnd    = /^<\/(\w+)[^>]*>/
