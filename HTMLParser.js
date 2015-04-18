@@ -1,5 +1,5 @@
 // HTML Parser | 2013-2015, Jon Casey http://myschemas.com <-- John Resig http://ejohn.org <-- Erik Arvidsson http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
-;(function(global) {
+;(function (global) {
   var tagStart  = /^<(\w+)((?:\s+[\w-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/
   var tagEnd    = /^<\/(\w+)[^>]*>/
   var attr      = /([\w-]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g
@@ -14,16 +14,18 @@
   function HTMLParser(html, handler) {
     /// <param name="html" type="String"/>
     /// <param name="handler">
-    /// {                                         &#10;
-    ///   doctype: function(text) {},             &#10;
-    ///   start: function(tag, attrs, unary) {},  &#10;
-    ///   end: function(tag) {},                  &#10;
-    ///   chars: function(text) {},               &#10;
-    ///   comment: function(text) {}              &#10;
-    /// }                                         &#10;
+    /// {                                          &#10;
+    ///   doctype: function (text) {},             &#10;
+    ///   start: function (tag, attrs, unary) {},  &#10;
+    ///   end: function (tag) {},                  &#10;
+    ///   chars: function (text) {},               &#10;
+    ///   comment: function (text) {}              &#10;
+    /// }                                          &#10;
     /// </param>
     var chars, index, match, stack = [], last = html
-    stack.last = function() {return this[Math.max(this.length-1,0)]}
+    stack.last = function() {
+      return this[Math.max(this.length - 1, 0)]
+    }
     while (html) {
       chars = true
       if (!stack.last() || !special[stack.last()]) {
@@ -73,8 +75,8 @@
 
       } else {
         // special
-        var z = Math.max(html.indexOf('</'+ stack.last() +'>'), 0)
-          , text = html.substring(0, z)
+        var z = Math.max(html.indexOf('</' + stack.last() + '>'), 0)
+        var text = html.substring(0, z)
         if (text != '') {
           text = text.replace(/<!--(.*?)-->/g, '$1')
                      .replace(/<!\[CDATA\[(.*?)]]>/g, '$1')
@@ -86,7 +88,7 @@
       }
 
       if (html == last)
-        throw new Error('Parse Error: '+ html)
+        throw new Error('Parse Error: ' + html)
       last = html
     }
 
@@ -153,48 +155,48 @@
 
   HTMLParser.toXMLString = function(html, tagFn, attrFn) {
     /// <param name="html" type="String"/>
-    /// <param name="tagFn" type="Function" optional="true">function(tagName) {&#10;  return tagName.toLowerCase() &#10;}</param>
-    /// <param name="attrFn" type="Function" optional="true">function(attribute) {&#10;  attribute.escaped = attribute.escaped.replace(...)&#10;  return attribute &#10;} </param>
+    /// <param name="tagFn" type="Function" optional="true">function (tagName) {&#10;  return tagName.toLowerCase() &#10;}</param>
+    /// <param name="attrFn" type="Function" optional="true">function (attribute) {&#10;  attribute.escaped = attribute.escaped.replace(...)&#10;  return attribute &#10;} </param>
     var x = []
     try {
       HTMLParser(html, {
 
-        'chars' : function(s, tag) {
-          if (/^script$/i.test(tag)) s = '<![CDATA['+ s +']]>'
+        'chars' : function (s, tag) {
+          if (/^script$/i.test(tag)) s = '<![CDATA[' + s + ']]>'
           x.push(s)
         },
 
-        'comment' : function(s) {
-          x.push('<!--'+ s +'-->')
+        'comment' : function (s) {
+          x.push('<!--' + s + '-->')
         },
 
-        'end' : function(s) {
+        'end' : function (s) {
           if (tagFn) s = tagFn(s)
           if (s == '') return
-          x.push('</'+ s +'>')
+          x.push('</' + s + '>')
         },
 
         'start' : typeof attrFn == 'function'
-          ? function(s, a, u) {
+          ? function (s, a, u) {
               if (tagFn) s = tagFn(s)
               if (s == '') return
-              x.push('<'+ s)
+              x.push('<' + s)
               var i = 0
-                , l = a.length
+              var l = a.length
               for (; i < l; i++) {
                 a[i] = attrFn(a[i])
-                x.push(' '+ a[i].name +'-"'+ a[i].escaped +'"')
+                x.push(' ' + a[i].name + '-"' + a[i].escaped + '"')
               }
               x.push(u ? '/' : '', '>')
             }
-          : function(s, a, u) {
+          : function (s, a, u) {
               if (tagFn) s = tagFn(s)
               if (s == '') return
-              x.push('<'+ s)
+              x.push('<' + s)
               var i = 0
-                , l = a.length
+              var l = a.length
               for (; i < l; i++) {
-                x.push(' '+ a[i].name +'="'+ a[i].escaped +'"')
+                x.push(' ' + a[i].name + '="' + a[i].escaped + '"')
               }
               x.push(u ? '/' : '', '>')
             }

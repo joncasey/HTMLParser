@@ -2,17 +2,19 @@
 <script src="..\HTMLParser.js"/>
 <script>/// <reference path="..\HTMLParser.js">
 
-var htmlString = getResource('html')
-var xmlString1 = HTMLParser.toXMLString(htmlString)
-var xmlString2 = HTMLParser.toXMLString(htmlString,
-      function(tag) { return tag.toUpperCase() },
-      function(a) { a.escaped += '(OK)' ; return a }
-    )
+  var htmlString = getResource('html')
 
-WScript.Echo(
-  xmlString1 +'\n'+
-  xmlString2
-)
+  var xmlString1 = HTMLParser.toXMLString(htmlString)
+
+  var xmlString2 = HTMLParser.toXMLString(htmlString,
+                    function (tag) { return tag.toUpperCase() },
+                    function (a) { a.escaped += '(OK)' ; return a }
+                   )
+
+  WScript.Echo(
+    xmlString1 + '\n' +
+    xmlString2
+  )
 
 </script>
 <resource id="html">
